@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//w3w//DTD XHTML 1.0 Strict//en" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://w3.org/1999/xhtml" >
+
+
+<head>
+	
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+	<meta name="Description" content="Моя домашняя Страница"/>
+	<meta name="Keywords" content="Сайт Посвещен Практике"/>
+	<title>Hello World Again</title>
+	<link rel="stylesheet" type="text/css" href="index.css" />
+
+	<script src="prefixfree.min.js"></script>
+	<script src="jquery.js"></script>
+
+
+	<script src="jquery.js"></script>
+
+	<meta name="description" content="CSS Tabs" />
+
+</head>
+
+<body onkeydown="shagai(event)">
+
+	<img src="start.gif" id="robot">
+	<textarea id="text"></textarea>
+	<input type="button" value="Применить" class="buton" onclick="textComand()">
+	<input type="button" value="Очистить" class="buton" onclick="clearet()">
+	<a id="idA" style="	position: absolute;">Some text</a>
+</script>
+
+<script>
+//размер Рабочего экрана при Загрузке
+var razmerEkranaH=document.documentElement.clientHeight,razmerEkranaW=document.documentElement.clientWidth;
+
+var textPole=document.getElementById('text');
+var idA=document.getElementById('idA');
+var buton=document.getElementsByClassName('buton')
+var addpole=document.createElement('img')
+var robotId=document.getElementById('robot')
+var tegA=document.getElementsByTagName('a');
+var pozPoleX=50,pozPoleY=50;
+var indX=0,indY=0,inapravlenie=4,pozXrobota=0,pozYrobota=0,stringKomand='';
+
+
+var placE=['P','L','A','C','E']
+var movE=['M','O','V','E'];
+var lefT=['L','E','F','T'];
+var righT=['R','I','G','H','T'];
+var reporT=['R','E','P','O','R','T'];
+
+var nortH=['N','O','R','T','H']
+var soutH=['S','O','U','T','H']
+var easT=['E','A','S','T']
+var wesT=['W','E','S','T']
+//Основной массив отсеивания Команд 
+var buffer=new Array();
+buffer[0]= new Array();
+//Временный буфер для Получения Команды без Запятых В I.тый элл... массива
+var tempBuffer=new Array();
+
+
+var comandPozXY=[]
+var massIndex=0;
+	//масив С направлением Картинки(Нубо версия)
+	var naprRobot=new Array()
+	naprRobot[0]='L.gif';
+	naprRobot[1]='Up.gif';
+	naprRobot[2]='R.gif';
+	naprRobot[3]='D.gif';
+	//относительная позиция Командного поля с кнопками 
+	textPole.style.left=razmerEkranaW-250+'px';
+	buton[0].style.left=razmerEkranaW-150+'px';
+	buton[0].style.top=170+'px';
+	buton[1].style.left=razmerEkranaW-250+'px';
+	buton[1].style.top=170+'px';
+	// Пример команд
+	textPole.value='PLACE 1,2,EAST \nMOVE \nMOVE\n LEFT\n MOVE\n REPORT \n move';
+
+
+	var e,r,iter,iterMasspoz,ji1,ji2;
+
+	function sovpadenieComand(text){
+		idA.innerHTML='';
+		e=0,r=0,iter,iterMasspoz=0,ji1=0,ji2=0;
+		tempBuffer[0]='',comandPozXY[0]='';
+		// Очищаю  массивs Для Следующего Вызова Командной Строки
+		tempBuffer=new Array();
+		buffer=new Array();
+
+		for (var i = 0; i < text.length; i++) {
+			//проверка на Разделитель команд 
+			if(text[i]!=' '&&text[i]!=','){
+		//Если цифра то заносим В Массив Координат РАзделитель , i+1 после цифр==,
+		if(text[i]>-1){
+			comandPozXY[iterMasspoz]+=text[i];
+	//		alert(comandPozXY)
+			if(text[i+1]==','){
+				iterMasspoz++;
+				comandPozXY[iterMasspoz]=''
+			}
+		}
+		else{
+				// Если не Цифра И не Разделитель Заносим В теустовый Буфер И еще Проверка на Наличие Элемента Так как Выкидывает Без нее Еще Не разобрался (
+					if(!buffer[ji1]){
+						buffer[ji1]=new Array();
+					}
+					buffer[ji1][ji2]=text[i];
+					ji2++;
+				}
+			}
+			else{
+				//Если Пробел или Запятая Переход На следущую Строку Буфера(след. Команда)
+				if(i!=0){
+					ji1++;
+					ji2=0;
+									//если Елемента МаТрици нет Создаем его Для
+									if(!buffer[ji1]){
+										buffer[ji1]=new Array();
+										//alert(buffer[ji1]+': '+ji1)
+									}
+								}
+							}
+
+						};
+		//После занисения Команд в матрицу 
+		//перемещаем Тег  <a>
+		idA.style.left=razmerEkranaW-600+'px'
+		idA.style.top=82+'px'
+		iter=-1;
+		//Здесь Преносим Данные Из Матрици В Массив Для Простоты Сравнения
+		for (var j = 0; j < buffer.length; j++) {
+			//Если элемент Матрици Правда То Подготавливаем TEMPLATE Массив Для ЗАпеси Команды В его Элемент
+			if(buffer[j]!=''){
+			//	alert(buffer[j])
+			iter++;
+			tempBuffer[iter]=''
+		}
+		for (var h = 0; h < buffer[j].length; h++) {
+			if(buffer[j][h]!=''&&buffer[j][h]!=','&&buffer[j][h]!=' '){
+				tempBuffer[iter]+=buffer[j][h]
+			}
+		}
+
+
+	};
+		//Обработка(Сравнение ) Команд из TEMPLATE Массива
+		for (var ii = 0; ii < tempBuffer.length; ii++) {
+					if(tempBuffer[ii]=='PLACE'){
+			//	alert(comandPozXY[0],comandPozXY[1])
+				//При наличии команды Место Задаем Координаты И соответственно следующий элемент НАправление так как Цыфры Были пропущены Занеся в comandPozXY массив Координат X.Y
+				if(comandPozXY[1]>-1&&comandPozXY[0]>-1&&comandPozXY[0]<=person[0]-1&&comandPozXY[1]<=person[1]-1){
+					ComandMove(comandPozXY[0],comandPozXY[1])
+				}
+				if (tempBuffer[ii+1]=="NORTH"){
+					pozKompas(3)
+				//	robotId.src=naprRobot[3];
+
+
+			
+			}
+			else	if (tempBuffer[ii+1]=="SOUTH"){
+				pozKompas(1)
+					//robotId.src=naprRobot[1];
+				
+			}
+			else if (tempBuffer[ii+1]=="EAST"){
+				pozKompas(2)
+				idA.innerHTML+=tempBuffer[ii]+'</br>'
+				//	robotId.src=naprRobot[2];
+						}
+			else if (tempBuffer[ii+1]=="WEST"){
+				pozKompas(0)
+					//robotId.src=naprRobot[0];
+							}
+		}
+
+		if(tempBuffer[ii]=='MOVE'){
+
+			shagai(38);
+			massIndex=0;
+		}
+		if(tempBuffer[ii]=='LEFT'){
+
+			shagai(37);
+			massIndex=0;
+		}
+		if(tempBuffer[ii]=='RIGHT'){
+
+			shagai(39);
+			massIndex=0;
+		}
+
+
+	}
+
+	idA.innerHTML='';
+	for (var ih = 0; ih < tempBuffer.length; ih++) {
+	
+	};
+	
+}
+
+function textComand(){
+	var text =textPole.value;
+	sovpadenieComand(text.toUpperCase())
+
+	text='';
+
+
+}
+//выбор позиции через Командную строку
+function pozKompas(e){
+	inapravlenie=e;
+	robotId.src=naprRobot[inapravlenie];
+	robotId.title=inapravlenie;
+}
+function clearet(){
+	textPole.value='';
+	idA.innerHTML='';
+}
+
+function drowpole(e,r){
+	for (var i = 0; i <r; i++) {
+		for (var j = 0; j < e; j++) {
+			addpole=document.createElement('img')
+			addpole.src='pole.jpg'
+			addpole.classList.add('pole');
+			addpole.classList.add('X:'+indX+'Y:'+indY);
+			addpole.style.top=pozPoleY+'px';
+			addpole.style.left=pozPoleX+'px';
+			addpole.title='X:'+indX+' Y:'+indY;
+			document.body.appendChild(addpole);
+			pozPoleX+=50;
+			indX++;
+		};	
+		indX=0;
+		indY++;
+		pozPoleX=50;
+		pozPoleY+=50;
+	};
+}
+
+
+var person=new Array()
+person[0] = prompt("введите Размер стола X",7);
+person[1] = prompt("введите Размер стола Y",7);
+if (person[0] !=''&&person[1]!='') {
+
+	drowpole(person[0],person[1])
+}
+	//Индексирую позиции поля добавляя В класс дла проверки перемищения
+	
+	window.onload= function() {
+		showPrompt(text, callback)
+	}
+	pozXrobota=0,pozYrobota=0;
+
+
+	function ComandMove (e,r) {
+		var eR=0
+		//alert(e,r)
+		if(e+r==0){eR=person[0]+person[1];}
+		for (var i = 0; i < e+r+eR; i++){
+			if (pozXrobota<e) {
+				pozXrobota++;
+				robotId.style.left=robotId.offsetLeft+50+'px';
+			}
+			else if(pozXrobota>e){
+				pozXrobota--;
+				robotId.style.left=robotId.offsetLeft-50+'px';
+			};
+			if (pozYrobota<r) {
+				pozYrobota++;
+				robotId.style.top=robotId.offsetTop+50+'px';				
+			}
+			else if(pozYrobota>r){
+				pozYrobota--;
+				robotId.style.top=robotId.offsetTop-50+'px';		
+			};
+			robotId.title=pozYrobota+':'+pozXrobota;
+		}
+		idA.innerHTML='';
+		idA.innerHTML=e+' : '+r+' : '+naprRobot;
+	}
+
+	var PoleTL= document.getElementsByClassName('pole')
+
+function getClassPoz1(ep,rp){
+
+		var poz_=document.getElementsByClassName('X:'+ep+'Y:'+ep).style
+		return	poz_;
+	}
+
+	function shagai(event){
+//Ходьба
+
+if(event.keyCode==38||event==38){
+//	alert()
+	//alert(pozYrobota+';'+pozXrobota)
+	if(inapravlenie==0){
+		if(pozXrobota>0){
+			pozXrobota--;
+			robotId.style.left=robotId.offsetLeft-50+'px';
+		}
+	}
+	if(inapravlenie==1){
+		if(pozYrobota>0){
+			pozYrobota--;
+			robotId.style.top=robotId.offsetTop-50+'px';
+		}
+	}
+	if(inapravlenie==2){
+		if(pozXrobota<person[0]-1){
+			pozXrobota++;
+			robotId.style.left=robotId.offsetLeft+50+'px';
+
+		}
+	}
+	if(inapravlenie==3){
+		if(pozYrobota<person[1]-1){
+			pozYrobota++;
+			robotId.style.top=robotId.offsetTop+50+'px';
+		}
+	}
+	robotId.title=pozXrobota+':'+pozXrobota;
+	//alert(getClassPoz1(pozXrobota,pozXrobota))
+}
+if(event.keyCode==32){
+	shagai(38)
+}
+
+	//направление (изначально не заданно)
+	if(event.keyCode==37||event==37){
+		if(inapravlenie<=0){
+			inapravlenie=3;
+			robotId.title=pozYrobota+':'+pozXrobota;
+		}
+		else{inapravlenie--}
+			robotId.src=naprRobot[inapravlenie];
+		robotId.title=pozYrobota+':'+pozXrobota;
+	}
+	if(event.keyCode==39||event==39){
+		if(inapravlenie>=3){inapravlenie=0
+			robotId.title=pozYrobota+':'+pozXrobota;
+		}
+		else{inapravlenie++}
+			robotId.src=naprRobot[inapravlenie];
+		robotId.title=pozYrobota+':'+pozXrobota;
+	}
+}
+
+
+</script>
+
+</body>
+
+</html>
